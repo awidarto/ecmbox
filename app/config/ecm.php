@@ -2,7 +2,7 @@
 
 
 return array(
-    'site_name'=>'CGI - ECM v.2',
+    'site_name'=>'BlackBox v.1',
     'active_theme'=>'default',
 
     'user_field'=>'email',
