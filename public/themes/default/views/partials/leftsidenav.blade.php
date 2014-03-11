@@ -40,8 +40,8 @@
                         <span>Client Relation</span>
                     </a>
                     <ul class="sub">
-                        <li><a href="{{ URL::to('client')}}"><i class="fa fa-money"></i>Contacts</a></li>
-                        <li><a href="{{ URL::to('client/company')}}"><i class="fa fa-money"></i>Companies</a></li>
+                        <li><a href="{{ URL::to('client')}}"><i class="fa fa-user"></i>Contacts</a></li>
+                        <li><a href="{{ URL::to('client/company')}}"><i class="fa fa-users"></i>Company</a></li>
                     </ul>
                 </li>
 

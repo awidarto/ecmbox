@@ -66,23 +66,23 @@ var Script = function () {
         },
         events: [
             {
-                title: 'All Day Event',
+                title: 'Apple Store Opening document review ( assigned by John McNamara )',
                 start: new Date(y, m, 1)
             },
             {
-                title: 'Long Event',
+                title: 'Three Day Seminar ( assigned by Peter Drucker )',
                 start: new Date(y, m, d-5),
                 end: new Date(y, m, d-2)
             },
             {
                 id: 999,
-                title: 'Repeating Event',
+                title: 'End of Week Review',
                 start: new Date(y, m, d-3, 16, 0),
                 allDay: false
             },
             {
                 id: 999,
-                title: 'Repeating Event',
+                title: 'Apple Store site visit',
                 start: new Date(y, m, d+4, 16, 0),
                 allDay: false
             },
@@ -98,16 +98,16 @@ var Script = function () {
                 allDay: false
             },
             {
-                title: 'Birthday Party',
+                title: 'PT CGI RUPS',
                 start: new Date(y, m, d+1, 19, 0),
                 end: new Date(y, m, d+1, 22, 30),
                 allDay: false
             },
             {
-                title: 'Click for Google',
+                title: 'Dinner Meeting with the Minister',
                 start: new Date(y, m, 28),
                 end: new Date(y, m, 29),
-                url: 'http://google.com/'
+                url: '#'
             }
         ]
     });

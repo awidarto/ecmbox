@@ -16,39 +16,10 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::to('bucket') }}/assets/fuelux/css/tree-style.css" />
 
         <div class="row">
-            <div class="col-sm-3">
-                <div class="panel">
-                    <div class="panel-heading">
-                        Departments
-                     <span class="tools pull-right">
-                            <a class="fa fa-chevron-down" href="javascript:;"></a>
-                            <a class="fa fa-cog" href="javascript:;"></a>
-                            <a class="fa fa-times" href="javascript:;"></a>
-                        </span>
-                    </div>
-                    <div class="panel-body">
-                        <div id="FlatTree2" class="tree">
-                            <div class = "tree-folder" style="display:none;">
-                                <div class="tree-folder-header">
-                                    <i class="fa fa-folder"></i>
-                                    <div class="tree-folder-name"></div>
-                                </div>
-                                <div class="tree-folder-content"></div>
-                                <div class="tree-loader" style="display:none"></div>
-                            </div>
-                            <div class="tree-item" style="display:none;">
-                                <i class="tree-dot"></i>
-                                <div class="tree-item-name"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-9">
+            <div class="col-sm-12">
                 <section class="panel">
                     <header class="panel-heading">
-                        Personnel
+                        Contacts
                         <span class="tools pull-right">
                             <a href="javascript:;" class="fa fa-chevron-down"></a>
                             <a href="javascript:;" class="fa fa-cog"></a>
@@ -64,7 +35,7 @@
                         <th>Last Name</th>
                         <th class="hidden-phone">Title</th>
                         <th class="hidden-phone">Company</th>
-                        <th class="hidden-phone">Status</th>
+                        <th class="hidden-phone">Phone</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -73,49 +44,49 @@
                         <td><a href="{{ URL::to('client/profile') }}">Tukimin</a></td>
                         <td class="hidden-phone">Product & Property Rights Manager</td>
                         <td class="center hidden-phone">PT. Holycow ! International</td>
-                        <td class="center hidden-phone">Permanent</td>
+                        <td class="center hidden-phone">08564975353</td>
                     </tr>
                     <tr class="gradeX">
                         <td>John</td>
                         <td><a href="{{ URL::to('client/profile') }}">McNamara</a></td>
                         <td class="hidden-phone">Head of General Litigation</td>
                         <td class="center hidden-phone">Senior Associate</td>
-                        <td class="center hidden-phone">Permanent</td>
+                        <td class="center hidden-phone">08564975353</td>
                     </tr>
                     <tr class="gradeX">
                         <td>Anthony</td>
                         <td><a href="{{ URL::to('client/profile') }}">Collins</a></td>
                         <td class="hidden-phone">Head of General Litigation</td>
                         <td class="center hidden-phone">Senior Associate</td>
-                        <td class="center hidden-phone">Permanent</td>
+                        <td class="center hidden-phone">08564975353</td>
                     </tr>
                     <tr class="gradeX">
                         <td>John</td>
                         <td><a href="{{ URL::to('client/profile') }}">McNamara</a></td>
                         <td class="hidden-phone">Head of General Litigation</td>
                         <td class="center hidden-phone">Senior Associate</td>
-                        <td class="center hidden-phone">Permanent</td>
+                        <td class="center hidden-phone">08564975353</td>
                     </tr>
                     <tr class="gradeX">
                         <td>John</td>
                         <td><a href="{{ URL::to('client/profile') }}">McNamara</a></td>
                         <td class="hidden-phone">Head of General Litigation</td>
                         <td class="center hidden-phone">Senior Associate</td>
-                        <td class="center hidden-phone">Permanent</td>
+                        <td class="center hidden-phone">08564975353</td>
                     </tr>
                     <tr class="gradeX">
                         <td>John</td>
                         <td><a href="{{ URL::to('client/profile') }}">McNamara</a></td>
                         <td class="hidden-phone">Head of General Litigation</td>
                         <td class="center hidden-phone">Senior Associate</td>
-                        <td class="center hidden-phone">Permanent</td>
+                        <td class="center hidden-phone">08564975353</td>
                     </tr>
                     <tr class="gradeX">
                         <td>John</td>
                         <td><a href="{{ URL::to('client/profile') }}">McNamara</a></td>
                         <td class="hidden-phone">Head of General Litigation</td>
                         <td class="center hidden-phone">Senior Associate</td>
-                        <td class="center hidden-phone">Permanent</td>
+                        <td class="center hidden-phone">08564975353</td>
                     </tr>
                     </tbody>
                     </table>

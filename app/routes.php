@@ -15,28 +15,53 @@ Route::get('/', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
 
-	return View::make('home');
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+	return View::make('home')->with('bc',$bc);
 });
 
 Route::get('calendar', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Calendar', '/calendar');
+    Breadcrumb::addBreadcrumb('Assignments');
+    Breadcrumb::setSeperator('');
 
-    return View::make('pages.calendar');
+    $bc = Breadcrumb::generate();
+
+
+    return View::make('pages.calendar')->with('bc',$bc);
 });
 
 Route::get('documents/detail', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
 
-    return View::make('pages.docdetail');
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Document Library', '/document');
+    Breadcrumb::addBreadcrumb('View');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+    return View::make('pages.docdetail')->with('bc',$bc);
 });
 
 Route::get('documents', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
 
-    return View::make('pages.document');
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Document Library', '/document');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+    return View::make('pages.document')->with('bc',$bc);
 });
 
 Route::get('hr/profile', function()
@@ -46,6 +71,7 @@ Route::get('hr/profile', function()
     Breadcrumb::addBreadcrumb('Home', '/');
     Breadcrumb::addBreadcrumb('Human Resources', '/hr');
     Breadcrumb::addBreadcrumb('Employee Profile');
+    Breadcrumb::setSeperator('');
 
     $bc = Breadcrumb::generate();
 
@@ -56,7 +82,14 @@ Route::get('hr', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
 
-    return View::make('pages.hrlist');
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Human Resources', '/hr');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+
+    return View::make('pages.hrlist')->with('bc',$bc);
 });
 
 Route::get('client/profile', function()
@@ -78,7 +111,7 @@ Route::get('client/company', function()
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
 
     Breadcrumb::addBreadcrumb('Home', '/');
-    Breadcrumb::addBreadcrumb('Client ', '/hr');
+    Breadcrumb::addBreadcrumb('Client Relation', '/hr');
     Breadcrumb::addBreadcrumb('Company');
     Breadcrumb::setSeperator('');
 
@@ -91,7 +124,14 @@ Route::get('client', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
 
-    return View::make('pages.clientlist');
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Client Relation', '/hr');
+    Breadcrumb::addBreadcrumb('Contacts');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+    return View::make('pages.clientlist')->with('bc',$bc);
 });
 
 Route::get('message/compose', function()
