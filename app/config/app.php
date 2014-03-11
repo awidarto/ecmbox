@@ -109,7 +109,6 @@ return array(
 
         'Jenssegers\Mongodb\MongodbServiceProvider',
         'Former\FormerServiceProvider',
-        'Noherczeg\Breadcrumb\BreadcrumbServiceProvider',
         'Intervention\Validation\ValidationServiceProvider',
         'Intervention\Image\ImageServiceProvider',
         'Intervention\Helper\DateServiceProvider',
