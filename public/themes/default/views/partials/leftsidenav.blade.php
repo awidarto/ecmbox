@@ -15,6 +15,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{URL::to('timesheet')}}">
+                        <i class="fa fa-calendar"></i>
+                        <span>Timesheet Recorder</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{URL::to('documents')}}">
                         <i class="fa fa-file-text"></i>
                         <span>Document Library</span>
@@ -51,7 +57,8 @@
                         <span>Billing & Invoices</span>
                     </a>
                     <ul class="sub">
-                        <li><a href="{{ URL::to('finance/billing')}}"><i class="fa fa-money"></i>Time Billings</a></li>
+                        <li><a href="{{ URL::to('finance/timebilling')}}"><i class="fa fa-money"></i>Time Billings</a></li>
+                        <li><a href="{{ URL::to('finance/billing')}}"><i class="fa fa-money"></i>General Billings</a></li>
                         <li><a href="{{ URL::to('finance/invoice')}}"><i class="fa fa-money"></i>Outgoing Invoices</a></li>
                         <li><a href="{{ URL::to('finance/invoice')}}"><i class="fa fa-money"></i>Incoming Payments</a></li>
                     </ul>

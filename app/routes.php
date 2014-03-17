@@ -37,6 +37,20 @@ Route::get('calendar', function()
     return View::make('pages.calendar')->with('bc',$bc);
 });
 
+Route::get('timesheet', function()
+{
+    Theme::setCurrentTheme( Config::get('ecm.active_theme') );
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Timesheet Recorder');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+
+    return View::make('pages.timesheet')->with('bc',$bc);
+});
+
+
 Route::get('documents/detail', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
@@ -63,6 +77,33 @@ Route::get('documents', function()
 
     return View::make('pages.document')->with('bc',$bc);
 });
+
+Route::get('finance/timebilling', function()
+{
+    Theme::setCurrentTheme( Config::get('ecm.active_theme') );
+
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Document Library', '/document');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+    return View::make('pages.timebilling')->with('bc',$bc);
+});
+
+Route::get('finance/billing', function()
+{
+    Theme::setCurrentTheme( Config::get('ecm.active_theme') );
+
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Document Library', '/document');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+    return View::make('pages.billing')->with('bc',$bc);
+});
+
 
 Route::get('hr/profile', function()
 {
