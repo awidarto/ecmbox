@@ -11,6 +11,10 @@
 |
 */
 
+Route::controller('products', 'ProductsController');
+Route::controller('home', 'HomeController');
+
+/*
 Route::get('/', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
@@ -22,6 +26,9 @@ Route::get('/', function()
 
 	return View::make('home')->with('bc',$bc);
 });
+*/
+
+Route::get('/','HomeController@getDashboard');
 
 Route::get('calendar', function()
 {
@@ -48,6 +55,33 @@ Route::get('timesheet', function()
 
 
     return View::make('pages.timesheet')->with('bc',$bc);
+});
+
+Route::get('projects/detail', function()
+{
+    Theme::setCurrentTheme( Config::get('ecm.active_theme') );
+
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('projects', '/projects');
+    Breadcrumb::addBreadcrumb('View');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+    return View::make('pages.projectdetail')->with('bc',$bc);
+});
+
+Route::get('projects', function()
+{
+    Theme::setCurrentTheme( Config::get('ecm.active_theme') );
+
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Projects', '/projects');
+    Breadcrumb::setSeperator('');
+
+    $bc = Breadcrumb::generate();
+
+    return View::make('pages.projects')->with('bc',$bc);
 });
 
 
@@ -239,17 +273,20 @@ Route::post('login',function(){
         return Redirect::to('login')->withErrors($validator);
     } else {
 
-        $userfield = Config::get('ecm.user_field');
-        $passwordfield = Config::get('ecm.password_field');
+        $userfield = Config::get('kickstart.user_field');
+        $passwordfield = Config::get('kickstart.password_field');
 
         // find the user
         $user = User::where($userfield, '=', Input::get('email'))->first();
 
+        //print_r($user->toArray());
+
+        //exit();
 
         // check if user exists
         if ($user) {
             // check if password is correct
-            if (Hash::check(Input::get('password'), $user->{$passwordfield} )) {
+            if (Hash::check(Input::get('pass'), $user->{$passwordfield} )) {
 
                 //print $user->{$passwordfield};
                 //exit();
@@ -262,7 +299,6 @@ Route::post('login',function(){
                 // validation not successful
                 // send back to form with errors
                 // send back to form with old input, but not the password
-                Session::flash('loginError', 'Email and password mismatch');
                 return Redirect::to('login')
                     ->withErrors($validator)
                     ->withInput(Input::except('password'));
@@ -272,7 +308,7 @@ Route::post('login',function(){
             // user does not exist in database
             // return them to login with message
             Session::flash('loginError', 'This user does not exist.');
-            return Redirect::to('login');
+            return Redirect::to('/');
         }
 
     }
@@ -281,8 +317,9 @@ Route::post('login',function(){
 
 Route::get('logout',function(){
     Auth::logout();
-    return Redirect::to('login');
+    return Redirect::to('/');
 });
+
 
 Route::get('pullcsv/{filename?}/{delimiter?}',function($filename='', $delimiter=','){
 

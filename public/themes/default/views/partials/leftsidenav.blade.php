@@ -32,7 +32,12 @@
                         <span>Messages</span>
                     </a>
                 </li>
-
+                <li>
+                    <a href="{{URL::to('projects')}}">
+                        <i class="fa fa-file-text"></i>
+                        <span>Projects</span>
+                    </a>
+                </li>
                 <li>
                     <a href="{{URL::to('hr')}}">
                         <i class="fa fa-users"></i>

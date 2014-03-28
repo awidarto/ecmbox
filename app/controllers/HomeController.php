@@ -20,4 +20,23 @@ class HomeController extends BaseController {
 		return View::make('hello');
 	}
 
+    public function getDashboard()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+
+        Theme::setCurrentTheme( Config::get('ecm.active_theme') );
+
+        Breadcrumb::addBreadcrumb('Home', '/');
+        Breadcrumb::setSeperator('');
+
+        $bc = Breadcrumb::generate();
+
+        $this->beforeFilter('auth', array('on'=>'get', 'only'=>array('getIndex','getAdd','getEdit') ));
+
+        Logger::access();
+
+        return View::make('home')->with('bc',$bc);
+
+    }
+
 }

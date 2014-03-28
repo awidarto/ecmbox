@@ -560,7 +560,7 @@
 <script src="{{ URL::to('bucket') }}/js/nicescroll/jquery.nicescroll.js"></script>
 
 <script src="{{ URL::to('bucket') }}/assets/calendar/clndr.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="{{ URL::to('bucket') }}/js/underscore-min.js"></script>
 
 <script src="{{ URL::to('bucket') }}/assets/calendar/moment-2.2.1.js"></script>
 <script src="{{ URL::to('bucket') }}/js/calendar/evnt.calendar.init.js"></script>
