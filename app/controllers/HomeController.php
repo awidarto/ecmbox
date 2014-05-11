@@ -31,7 +31,7 @@ class HomeController extends BaseController {
 
         $bc = Breadcrumb::generate();
 
-        $this->beforeFilter('auth', array('on'=>'get', 'only'=>array('getIndex','getAdd','getEdit') ));
+        $this->beforeFilter('auth', array('on'=>'get', 'only'=>array('getIndex','getAdd','getEdit','getDashboard') ));
 
         Logger::access();
 

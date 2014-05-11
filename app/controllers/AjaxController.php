@@ -43,10 +43,116 @@ class AjaxController extends BaseController {
 
     }
 
+    public function postScan()
+    {
+        $in = Input::get();
+
+        $attid = trim( strtoupper($in['txtin']));
+
+        //$guest = Attendee::find($attid);
+
+        $guest = Attendee::where('hcode','=',$attid)->first();
+
+        $attendee = false;
+
+        $tabstat = false;
+
+        if($guest){
+            $attendee = $guest->toArray();
+            if( isset($guest->scanned) && $guest->scanned >= 1){
+                //$guest->attending = $guest->attending + 1;
+                $guest->scanned = $guest->scanned + 1;
+                $guest->save();
+
+                if(date('Y-m-d',time()) == '2014-03-14' || Config::get('seater.is_gala') == true ){
+                    $instat = '<h1>Welcome back to Gala Dinner</h1>';
+                }else{
+                    $instat = '<h1>Welcome back to</h1>';
+                }
+
+                $instat .= '<h1>'.Config::get('seater.event_name').' !</h1>';
+
+                $statcount = Attendee::where('tableNumber','=',$guest->tableNumber)
+                    ->where('seatNumber','=',$guest->seatNumber)
+                    ->where('attending','=',1)
+                    ->count();
+                $res = 'NOK';
+            }else{
+
+                $guest->attending = 1;
+                $guest->scanned = 1;
+                $guest->save();
+                if(date('Y-m-d',time()) == '2014-03-14' || Config::get('seater.is_gala') == true ){
+                    $instat = '<h1>Welcome, to Gala Dinner</h1>';
+                }else{
+                    $instat = '<h1>Welcome, to</h1>';
+                }
+                $instat .= '<h1>'.Config::get('seater.event_name').' !</h1>';
+
+                $statcount = Attendee::where('tableNumber','=',$guest->tableNumber)
+                    ->where('seatNumber','=',$guest->seatNumber)
+                    ->where('attending','=',1)
+                    ->count();
+
+                $res = 'OK';
+            }
+
+            $logdata = $attendee;
+
+            $logdata['guest_id'] = $logdata['_id'];
+            unset($logdata['_id']);
+            $attlog = new Attendancelog();
+
+            foreach($logdata as $k=>$v){
+                $attlog->{$k} = $v;
+            }
+
+            $attlog->createdDate = new MongoDate();
+            $attlog->lastUpdate = new MongoDate();
+
+            $attlog->save();
+
+        }else{
+            $instat = 'Unregistered guest code.';
+            $res = 'NOK';
+        }
+
+
+        $attending = Attendee::where('attending','=',1)->get()->toArray();
+
+        $ts = array();
+
+        foreach ($attending as $att) {
+            $tidx = $att['type'].'-'.$att['tableNumber'];
+            if(isset($ts[$tidx])){
+                $ts[$tidx] = $ts[$tidx] + 1;
+            }else{
+                $ts[$tidx] = 1;
+            }
+        }
+
+        $tabstat = $ts;
+        /*
+        $tabstat = array();
+        foreach($ts as $key=>$value){
+            $tabstat[] = array('id'=>$key,'val'=>$value);
+        }
+        */
+
+        $result = array(
+            'attendee'=>$attendee,
+            'tabstat'=>$tabstat,
+            'html'=>$instat,
+            'result'=>$res
+        );
+
+        return Response::json($result);
+    }
+
     public function postProductinfo(){
         $pid = Input::get('product_id');
 
-        $p = Property::find($pid);
+        $p = Product::find($pid);
 
         if($p){
             return Response::json(array('result'=>'OK:FOUND', 'data'=>$p->toArray() ));
@@ -57,9 +163,9 @@ class AjaxController extends BaseController {
 
     }
 
+
     public function postProductpicture(){
         $data = Input::get();
-
 
         $defaults = array();
 
@@ -145,7 +251,139 @@ class AjaxController extends BaseController {
         $data['defaultpictures'] = $defaults;
         $data['files'] = $files;
 
-        $p = Property::find($data['upload_id']);
+        $p = Product::find($data['upload_id']);
+
+        $p->thumbnail_url =  $data['thumbnail_url'];
+        $p->large_url =  $data['large_url'];
+        $p->medium_url =  $data['medium_url'];
+        $p->full_url =  $data['full_url'];
+        $p->delete_type =  $data['delete_type'];
+        $p->delete_url =  $data['delete_url'];
+        $p->filename =  $data['filename'];
+        $p->filesize =  $data['filesize'];
+        $p->temp_dir =  $data['temp_dir'];
+        $p->filetype =  $data['filetype'];
+        $p->fileurl =  $data['fileurl'];
+        $p->file_id =  $data['file_id'];
+        $p->caption =  $data['caption'];
+        $p->defaultpic =  $data['defaultpic'];
+        $p->brchead =  $data['brchead'];
+        $p->brc1 =  $data['brc1'];
+        $p->brc2 =  $data['brc2'];
+        $p->brc3 =  $data['brc3'];
+        $p->defaultpictures =  $data['defaultpictures'];
+        $p->files =  $data['files'];
+
+        if($p->save()){
+            return Response::json(array('result'=>'OK:UPLOADED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:UPDATEFAILED' ));
+        }
+
+    }
+
+    public function postDocumentinfo(){
+        $pid = Input::get('doc_id');
+
+        $p = Document::find($pid);
+
+        if($p){
+            return Response::json(array('result'=>'OK:FOUND', 'data'=>$p->toArray() ));
+        }else{
+            return Response::json(array('result'=>'ERR:NOTFOUND'));
+        }
+
+
+    }
+
+    public function postDocumentfiles(){
+        $data = Input::get();
+
+        $defaults = array();
+
+        $files = array();
+
+        if( isset($data['file_id']) && count($data['file_id'])){
+
+            $data['defaultpic'] = (isset($data['defaultpic']))?$data['defaultpic']:$data['file_id'][0];
+            $data['brchead'] = (isset($data['brchead']))?$data['brchead']:$data['file_id'][0];
+            $data['brc1'] = (isset($data['brc1']))?$data['brc1']:$data['file_id'][0];
+            $data['brc2'] = (isset($data['brc2']))?$data['brc2']:$data['file_id'][0];
+            $data['brc3'] = (isset($data['brc3']))?$data['brc3']:$data['file_id'][0];
+
+
+            for($i = 0 ; $i < count($data['file_id']); $i++ ){
+
+
+                $files[$data['file_id'][$i]]['thumbnail_url'] = $data['thumbnail_url'][$i];
+                $files[$data['file_id'][$i]]['large_url'] = $data['large_url'][$i];
+                $files[$data['file_id'][$i]]['medium_url'] = $data['medium_url'][$i];
+                $files[$data['file_id'][$i]]['full_url'] = $data['full_url'][$i];
+
+                $files[$data['file_id'][$i]]['delete_type'] = $data['delete_type'][$i];
+                $files[$data['file_id'][$i]]['delete_url'] = $data['delete_url'][$i];
+                $files[$data['file_id'][$i]]['filename'] = $data['filename'][$i];
+                $files[$data['file_id'][$i]]['filesize'] = $data['filesize'][$i];
+                $files[$data['file_id'][$i]]['temp_dir'] = $data['temp_dir'][$i];
+                $files[$data['file_id'][$i]]['filetype'] = $data['filetype'][$i];
+                $files[$data['file_id'][$i]]['fileurl'] = $data['fileurl'][$i];
+                $files[$data['file_id'][$i]]['file_id'] = $data['file_id'][$i];
+                $files[$data['file_id'][$i]]['caption'] = $data['caption'][$i];
+
+                if($data['defaultpic'] == $data['file_id'][$i]){
+                    $defaults['thumbnail_url'] = $data['thumbnail_url'][$i];
+                    $defaults['large_url'] = $data['large_url'][$i];
+                    $defaults['medium_url'] = $data['medium_url'][$i];
+                    $defaults['full_url'] = $data['full_url'][$i];
+                }
+
+                if($data['brchead'] == $data['file_id'][$i]){
+                    $defaults['brchead'] = $data['large_url'][$i];
+                }
+
+                if($data['brc1'] == $data['file_id'][$i]){
+                    $defaults['brc1'] = $data['large_url'][$i];
+                }
+
+                if($data['brc2'] == $data['file_id'][$i]){
+                    $defaults['brc2'] = $data['large_url'][$i];
+                }
+
+                if($data['brc3'] == $data['file_id'][$i]){
+                    $defaults['brc3'] = $data['large_url'][$i];
+                }
+
+
+            }
+
+        }else{
+
+            $data['thumbnail_url'] = array();
+            $data['large_url'] = array();
+            $data['medium_url'] = array();
+            $data['full_url'] = array();
+            $data['delete_type'] = array();
+            $data['delete_url'] = array();
+            $data['filename'] = array();
+            $data['filesize'] = array();
+            $data['temp_dir'] = array();
+            $data['filetype'] = array();
+            $data['fileurl'] = array();
+            $data['file_id'] = array();
+            $data['caption'] = array();
+
+            $data['defaultpic'] = '';
+            $data['brchead'] = '';
+            $data['brc1'] = '';
+            $data['brc2'] = '';
+            $data['brc3'] = '';
+        }
+
+
+        $data['defaultpictures'] = $defaults;
+        $data['files'] = $files;
+
+        $p = Document::find($data['upload_id']);
 
         $p->thumbnail_url =  $data['thumbnail_url'];
         $p->large_url =  $data['large_url'];
@@ -551,59 +789,6 @@ class AjaxController extends BaseController {
         }else{
             return Response::json(array('result'=>'ERR'));
         }
-
-    }
-
-    public function postPropchangestatus(){
-        $in = Input::get();
-
-        $trx_id = $in['trx_id'];
-
-        $status = $in['status'];
-
-        $property = Property::find($trx_id);
-
-        $trx = Transaction::where('propObjectId','=',$trx_id)->first();
-
-        $property->propertyStatus = $status;
-        $property->save();
-
-        if($status == 'sold' || $status == 'pending'){
-            $trx->orderStatus = $status;
-            $trx->save();
-        }else{
-            $trx->orderStatus = 'canceled';
-            $trx->save();
-        }
-
-        return Response::json(array('result'=>'OK'));
-
-    }
-
-    public function postChangestatus(){
-        $in = Input::get();
-
-        $trx_id = $in['trx_id'];
-
-        $status = $in['status'];
-
-        $trx = Transaction::find($trx_id);
-
-        $property = Property::find($trx['propObjectId']);
-
-        if($status == 'canceled'){
-            $property->propertyStatus = 'available';
-            $property->save();
-            $trx->orderStatus = $status;
-            $trx->save();
-        }else if($status == 'sold'){
-            $property->propertyStatus = 'sold';
-            $property->save();
-            $trx->orderStatus = $status;
-            $trx->save();
-        }
-
-        return Response::json(array('result'=>'OK'));
 
     }
 

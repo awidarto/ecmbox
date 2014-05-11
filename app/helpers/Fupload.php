@@ -8,6 +8,10 @@ class Fupload {
     public static $url = 'upload';
     public static $multi = true;
 
+    public static $updetail = 'fupload.detail';
+    public static $jsdetail = 'fupload.jsdetail';
+    public static $ajaxdetail = 'fupload.jsajdetail';
+
     public function __construct()
     {
 

@@ -14,16 +14,25 @@
                         <span>Calendar</span>
                     </a>
                 </li>
+                {{--
+
                 <li>
                     <a href="{{URL::to('timesheet')}}">
                         <i class="fa fa-calendar"></i>
                         <span>Timesheet Recorder</span>
                     </a>
                 </li>
+                --}}
                 <li>
                     <a href="{{URL::to('documents')}}">
                         <i class="fa fa-file-text"></i>
                         <span>Document Library</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{URL::to('locator')}}">
+                        <i class="fa fa-envelope"></i>
+                        <span>Team Locator</span>
                     </a>
                 </li>
                 <li>
@@ -33,7 +42,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{URL::to('projects')}}">
+                    <a href="{{URL::to('project')}}">
                         <i class="fa fa-file-text"></i>
                         <span>Projects</span>
                     </a>
@@ -48,13 +57,16 @@
                 <li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-star"></i>
-                        <span>Client Relation</span>
+                        <span>Client & Investor Relation</span>
                     </a>
                     <ul class="sub">
                         <li><a href="{{ URL::to('client')}}"><i class="fa fa-user"></i>Contacts</a></li>
                         <li><a href="{{ URL::to('client/company')}}"><i class="fa fa-users"></i>Company</a></li>
+                        <li><a href="{{ URL::to('correspondence')}}"><i class="fa fa-user"></i>Correspondes</a></li>
+                        <li><a href="{{ URL::to('press')}}"><i class="fa fa-user"></i>Press Releases</a></li>
                     </ul>
                 </li>
+
 
                 <li class="sub-menu">
                     <a href="javascript:;">
@@ -62,10 +74,32 @@
                         <span>Billing & Invoices</span>
                     </a>
                     <ul class="sub">
-                        <li><a href="{{ URL::to('finance/timebilling')}}"><i class="fa fa-money"></i>Time Billings</a></li>
-                        <li><a href="{{ URL::to('finance/billing')}}"><i class="fa fa-money"></i>General Billings</a></li>
-                        <li><a href="{{ URL::to('finance/invoice')}}"><i class="fa fa-money"></i>Outgoing Invoices</a></li>
-                        <li><a href="{{ URL::to('finance/invoice')}}"><i class="fa fa-money"></i>Incoming Payments</a></li>
+                        <li>
+                            <a href="{{URL::to('finance/invoice')}}">
+                                <i class="fa fa-money"></i>
+                                <span>Receivables</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{URL::to('finance/billing')}}">
+                                <i class="fa fa-money"></i>
+                                <span>Payables</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-gears"></i>
+                        <span>System</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="{{ URL::to('user')}}"><i class="fa fa-users"></i>Users</a></li>
+                        <li><a href="{{ URL::to('option')}}"><i class="fa fa-wrench"></i>Options</a></li>
+
                     </ul>
                 </li>
 

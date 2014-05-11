@@ -11,11 +11,11 @@ return array(
             'Mrs'=>'Mrs',
             'Ms'=>'Ms',
         ),
+
     'admin_roles'=>array(
-            'root'=>'Super Administrator',
-            'admin'=>'Administrator',
-            'cashier'=>'Cashier',
-            'warehouse'=>'Warehouse'
-        ),
+        'root'=>'Superadmin',
+        'admin'=>'Admin',
+        'editor'=>'Content Editor'
+        )
 
     );

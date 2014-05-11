@@ -16,7 +16,7 @@ class AdminController extends Controller {
 
 	public $form;
 
-	public $form_framework = 'TwitterBootstrap';
+	public $form_framework = 'TwitterBootstrap3';
 
 	public $form_class = 'form-horizontal';
 
@@ -58,21 +58,25 @@ class AdminController extends Controller {
 
     public $report_action = '';
 
+    public $is_additional_action = false;
+
+    public $additional_action = '';
+
+    public $additional_filter = '';
+
+    public $js_additional_param = '';
+
+    public $additional_query = false;
+
+    public $modal_sets = '';
+
+    public $js_table_event = '';
 
 	public function __construct(){
 
 		date_default_timezone_set('Asia/Jakarta');
 
 		Former::framework($this->form_framework);
-
-        Breadcrumb::addBreadcrumb('Home', '/');
-        Breadcrumb::addBreadcrumb('Calendar', '/calendar');
-        Breadcrumb::addBreadcrumb('Assignments');
-        Breadcrumb::setSeperator('');
-
-        $this->crumb = Breadcrumb::generate();
-
-        //$this->crumb = new \Noherczeg\Breadcrumb\Breadcrumb(URL::to('/'));
 
 		$this->beforeFilter('auth', array('on'=>'get', 'only'=>array('getIndex','getAdd','getEdit') ));
 
@@ -164,8 +168,13 @@ class AdminController extends Controller {
             ->with('can_add', $this->can_add )
             ->with('is_report',$this->is_report)
             ->with('report_action',$this->report_action)
+            ->with('is_additional_action',$this->is_additional_action)
+            ->with('additional_action',$this->additional_action)
+            ->with('additional_filter',$this->additional_filter)
+            ->with('js_additional_param', $this->js_additional_param)
+            ->with('modal_sets', $this->modal_sets)
+            ->with('js_table_event', $this->js_table_event)
 			->with('heads',$heads )
-            ->with('bc',$this->crumb)
 			->with('row',$this->rowdetail );
 
 
@@ -327,6 +336,10 @@ class AdminController extends Controller {
 			}
 
 		}
+
+        if($this->additional_query){
+            $q = array_merge( $q, $this->additional_query );
+        }
 
 		//print_r($q);
 
@@ -502,13 +515,15 @@ class AdminController extends Controller {
 
 		$form = $this->form;
 
+        $title = ($this->title == '')?Str::singular($this->controller_name):$this->title;
+
 		return View::make($controller_name.'.'.$this->form_add)
 					->with('back',$controller_name)
                     ->with('auxdata',$data)
 					->with('form',$form)
 					->with('submit',$controller_name.'/add')
 					->with('crumb',$this->crumb)
-					->with('title','New '.Str::singular($this->controller_name));
+					->with('title','New '.$title);
 
 	}
 
@@ -589,13 +604,16 @@ class AdminController extends Controller {
 
 		Former::populate($population);
 
+        $title = ($this->title == '')?Str::singular($this->controller_name):$this->title;
+
 		//$this->crumb->add(strtolower($this->controller_name).'/edit/'.$id,$id,false);
 
 		return View::make(strtolower($this->controller_name).'.'.$this->form_edit)
 					->with('back',$controller_name)
 					->with('formdata',$population)
+                    ->with('crumb',$this->crumb )
 					->with('submit',strtolower($this->controller_name).'/edit/'.$id)
-					->with('title','Edit '.Str::singular($this->controller_name));
+					->with('title','Edit '.$title);
 
 	}
 
@@ -756,7 +774,7 @@ class AdminController extends Controller {
     public function postDlxl()
     {
 
-        $fields = $this->fields;
+        $fields = $this->fields; // fields set must align with search column index
 
         if(is_null($this->heads)){
             $titles = array();
@@ -778,6 +796,8 @@ class AdminController extends Controller {
         $infilters = Input::get('filter');
         $insorting = Input::get('sort');
 
+        //print_r($infilters);
+        //print_r($fields);
 
         $defsort = 1;
         $defdir = -1;
@@ -969,6 +989,8 @@ class AdminController extends Controller {
 
         }
 
+        $lastQuery = $q;
+
         //print_r($results->toArray());
 
         $aadata = array();
@@ -1093,7 +1115,8 @@ class AdminController extends Controller {
             'status'=>'OK',
             'filename'=>$fname,
             'urlxls'=>URL::to(strtolower($this->controller_name).'/dl/'.$fname.'.xls'),
-            'urlcsv'=>URL::to(strtolower($this->controller_name).'/csv/'.$fname.'.csv')
+            'urlcsv'=>URL::to(strtolower($this->controller_name).'/csv/'.$fname.'.csv'),
+            'q'=>$lastQuery
         );
 
         print json_encode($result);

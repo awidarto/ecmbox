@@ -2,6 +2,11 @@
 
 @section('content')
 
+<link href="{{ URL::to('bucket') }}/assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
+<link href="{{ URL::to('bucket') }}/assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ URL::to('bucket') }}/assets/data-tables/DT_bootstrap.css" />
+
+
 <style type="text/css">
 .act{
 	cursor: pointer;
@@ -24,166 +29,215 @@
 	color:white;
 }
 
+th{
+	border-right:thin solid #eee;
+	border-top: thin solid #eee;
+}
+
+th:first-child{
+	border-left:thin solid #eee;
+}
+
 .del,.upload{
 	cursor:pointer;
 }
 
+input[type=checkbox]{
+	width:20px;
+}
+
 </style>
 
-<div class="row-fluid">
-	<div class="span6 command-bar">
 
-        <h3>{{ $title }}</h3>
+<div class="row">
+   <div class="col-md-12">
 
-        @if(isset($can_add) && $can_add == true)
-	       	<a href="{{ URL::to($addurl) }}" class="btn btn-primary">Add</a>
-	       	<a href="{{ URL::to($importurl) }}" class="btn btn-primary">Import Excel</a>
-       	@endif
+		<section class="panel">
+	        <header class="panel-heading">
+		        {{ $title }}
+	            <span class="tools pull-right">
+	                <a href="javascript:;" class="fa fa-chevron-down"></a>
+	             </span>
+	        </header>
+	        <div class="panel-body">
 
-        @if(isset($is_report) && $is_report == true)
-        	{{ $report_action }}
-       	@endif
-	       	<a class="btn" id="download-xls">Download Excel</a>
-	       	<a class="btn" id="download-csv">Download CSV</a>
-	 </div>
-	 <div class="span6">
-	 </div>
-</div>
+				<div class="row">
+					<div class="col-md-6 command-bar">
 
-<div class="row-fluid">
-   <div class="span12">
+				        @if(isset($can_add) && $can_add == true)
+					       	<a href="{{ URL::to($addurl) }}" class="btn btn-primary">Add</a>
+					       	<a href="{{ URL::to($importurl) }}" class="btn btn-primary">Import Excel</a>
+				       	@endif
+					       	<a class="btn" id="download-xls">Download Excel</a>
+					       	<a class="btn" id="download-csv">Download CSV</a>
+					 </div>
+					 <div class="col-md-6 command-bar">
+					 	@if(Auth::user()->role == 'admin' || Auth::user()->role == 'root')
+					        @if(isset($can_clear_att) && $can_clear_att == true)
+						       	<a class="btn pull-right" id="clear-attendance" >Clear Attendance</a>
+					       	@endif
+					        @if(isset($can_clear_log) && $can_clear_log == true)
+						       	<a class="btn pull-right" id="clear-log" >Clear Log</a>
+					       	@endif
+					 	@endif
+					 </div>
+				</div>
 
-      <table class="table table-condensed dataTable">
+		        <div class="adv-table">
 
-		    <thead>
+			      <table class="table table-condensed dataTable dataTables_wrapper">
 
-		        <tr>
-		        	@foreach($heads as $head)
-		        		@if(is_array($head))
-		        			<th
-		        				@foreach($head[1] as $key=>$val)
-		        					@if(!is_array($val))
-		        						{{ $key }}="{{ $val }}"
-		        					@endif
-		        				@endforeach
-		        			>
-		        			{{ $head[0] }}
-		        			</th>
-		        		@else
-		        		<th>
-		        			{{ $head }}
-		        		</th>
-		        		@endif
-		        	@endforeach
-		        </tr>
-		        @if(isset($secondheads) && !is_null($secondheads))
-		        	<tr>
-		        	@foreach($secondheads as $head)
-		        		@if(is_array($head))
-		        			<th
-		        				@foreach($head[1] as $key=>$val)
-		        					@if($key != 'search')
-			        					{{ $key }}="{{ $val }}"
-		        					@endif
-		        				@endforeach
-		        			>
-		        			{{ $head[0] }}
-		        			</th>
-		        		@else
-		        		<th>
-		        			{{ $head }}
-		        		</th>
-		        		@endif
-		        	@endforeach
-		        	</tr>
-		        @endif
-		    </thead>
+					    <thead>
 
-			<?php
-				$form = new Former();
-			?>
+					        <tr>
+					        	@foreach($heads as $head)
+					        		@if(is_array($head))
+					        			<th
+					        				@foreach($head[1] as $key=>$val)
+					        					@if(!is_array($val))
+					        						{{ $key }}="{{ $val }}"
+					        					@endif
+					        				@endforeach
+					        			>
+					        			{{ $head[0] }}
+					        			</th>
+					        		@else
+					        		<th>
+					        			{{ $head }}
+					        		</th>
+					        		@endif
+					        	@endforeach
+					        </tr>
+					        @if(isset($secondheads) && !is_null($secondheads))
+					        	<tr>
+					        	@foreach($secondheads as $head)
+					        		@if(is_array($head))
+					        			<th
+					        				@foreach($head[1] as $key=>$val)
+					        					@if($key != 'search')
+						        					{{ $key }}="{{ $val }}"
+					        					@endif
+					        				@endforeach
+					        			>
+					        			{{ $head[0] }}
+					        			</th>
+					        		@else
+					        		<th>
+					        			{{ $head }}
+					        		</th>
+					        		@endif
+					        	@endforeach
+					        	</tr>
+					        @endif
+					    </thead>
 
-		    <thead id="searchinput">
-			    <tr>
-			    <?php $index = -1 ;?>
-		    	@foreach($heads as $in)
-		    		@if( $in[0] != 'select_all' && $in[0] != '')
-			    		@if(isset($in[1]['search']) && $in[1]['search'] == true)
-			    			@if(isset($in[1]['date']) && $in[1]['date'])
-				        		<td>
-									<div class="input-append date datepickersearch" id="{{ $index }}" data-date="" data-date-format="dd-mm-yyyy">
-									    <input class="span8 search_init dateinput" size="16" type="text" value="" placeholder="{{$in[0]}}" >
-									    <span class="add-on"><i class="icon-th"></i></span>
-									</div>
-									{{--
-									<div id="{{ $index }}" class="input-append datepickersearch">
-									    <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy" class="search_init dateinput" type="text" placeholder="{{$in[0]}}" ></input>
-									    <span class="add-on">
-											<i data-time-icon="icon-clock" data-date-icon="icon-calendar">
-											</i>
-									    </span>
-									</div>
+						<?php
+							$form = new Former();
+						?>
 
-									--}}
+					    <thead id="searchinput">
+						    <tr>
+						    <?php $index = -1 ;?>
+					    	@foreach($heads as $in)
+					    		@if( $in[0] != 'select_all' && $in[0] != '')
+						    		@if(isset($in[1]['search']) && $in[1]['search'] == true)
+						    			@if(isset($in[1]['date']) && $in[1]['date'])
+							        		<td>
+												<div class="input-append date datepickersearch" id="{{ $index }}" data-date="" data-date-format="dd-mm-yyyy">
+												    <input class="span8 search_init dateinput" size="16" type="text" value="" placeholder="{{$in[0]}}" >
+												    <span class="add-on"><i class="icon-th"></i></span>
+												</div>
+												{{--
+												<div id="{{ $index }}" class="input-append datepickersearch">
+												    <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy" class="search_init dateinput" type="text" placeholder="{{$in[0]}}" ></input>
+												    <span class="add-on">
+														<i data-time-icon="icon-clock" data-date-icon="icon-calendar">
+														</i>
+												    </span>
+												</div>
 
-				        		</td>
-			    			@elseif(isset($in[1]['datetime']) && $in[1]['datetime'])
-				        		<td>
-									<div class="input-append date datetimepickersearch" id="{{ $index }}" data-date="" data-date-format="dd-mm-yyyy">
-									    <input class="span8 search_init datetimeinput" size="16" type="text" value="" placeholder="{{$in[0]}}" >
-									    <span class="add-on"><i class="icon-th"></i></span>
-									</div>
-									{{--
-									<div id="{{ $index }}" class="input-append datetimepickersearch">
-									    <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy hh:mm:ss" class="search_init datetimeinput" type="text" placeholder="{{$in[0]}}" ></input>
-									    <span class="add-on">
-											<i data-time-icon="icon-clock" data-date-icon="icon-calendar">
-											</i>
-									    </span>
-									</div>
-									--}}
-				        		</td>
-			    			@elseif(isset($in[1]['select']) && is_array($in[1]['select']))
-			    				<td>
-			    					<input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" style="display:none;" class="search_init {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
-			    					<div class="styled-select">
-				    					{{ Form::select('select_'.$in[0],$in[1]['select'],null,array('class'=>'selector input-small','id'=>$index ))}}
-			    					</div>
-			    				</td>
-			    			@else
-				        		<td>
-				        			<input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" class="search_init {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
-				        		</td>
-			    			@endif
-		    			@else
-			    			@if(isset($in[1]['clear']) && $in[1]['clear'] == true)
-			    				<td><span id="clearsearch" style="cursor:pointer;">Clear Search</span></td>
-			    			@else
-				        		<td>&nbsp;</td>
-			    			@endif
-		    			@endif
+												--}}
 
-			    		<?php $index++; ?>
+							        		</td>
+						    			@elseif(isset($in[1]['datetime']) && $in[1]['datetime'])
+							        		<td>
+												<div class="input-append date datetimepickersearch" id="{{ $index }}" data-date="" data-date-format="dd-mm-yyyy">
+												    <input class="span8 search_init datetimeinput" size="16" type="text" value="" placeholder="{{$in[0]}}" >
+												    <span class="add-on"><i class="icon-th"></i></span>
+												</div>
+												{{--
+												<div id="{{ $index }}" class="input-append datetimepickersearch">
+												    <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy hh:mm:ss" class="search_init datetimeinput" type="text" placeholder="{{$in[0]}}" ></input>
+												    <span class="add-on">
+														<i data-time-icon="icon-clock" data-date-icon="icon-calendar">
+														</i>
+												    </span>
+												</div>
+												--}}
+							        		</td>
+						    			@elseif(isset($in[1]['select']) && is_array($in[1]['select']))
+						    				<td>
+						    					<input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" style="display:none;" class="search_init {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
+						    					<div class="styled-select">
+							    					{{ Form::select('select_'.$in[0],$in[1]['select'],null,array('class'=>'selector input-small','id'=>$index ))}}
+						    					</div>
+						    				</td>
+						    			@else
+							        		<td>
+							        			<input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" class="search_init {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
+							        		</td>
+						    			@endif
+					    			@else
+						    			@if(isset($in[1]['clear']) && $in[1]['clear'] == true)
+						    				<td><span id="clearsearch" style="cursor:pointer;">Clear Search</span></td>
+						    			@else
+							        		<td>&nbsp;</td>
+						    			@endif
+					    			@endif
 
-		    		@elseif($in[0] == 'select_all')
-	    				<td>{{ Former::checkbox('select_all') }}</td>
-		    		@elseif($in[0] == '')
-		        		<td>&nbsp;</td>
-		    		@endif
+						    		<?php $index++; ?>
+
+					    		@elseif($in[0] == 'select_all')
+				    				<td>{{ Former::checkbox('select_all') }}</td>
+					    		@elseif($in[0] == '')
+					        		<td>&nbsp;</td>
+					    		@endif
 
 
-		    	@endforeach
-			    </tr>
-		    </thead>
+					    	@endforeach
+						    </tr>
+					    </thead>
 
-         <tbody>
-         	<!-- will be replaced by ajax content -->
-         </tbody>
+			         <tbody>
+			         	<!-- will be replaced by ajax content -->
+			         </tbody>
 
-      </table>
+			      </table>
+
+
+		        </div>
+		    </div>
+		</section>
+
+
 
    </div>
 </div>
+
+<div id="print-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">Print Barcode Tag</h3>
+	</div>
+		<div class="modal-body">
+
+		</div>
+	<div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	<button class="btn btn-primary" id="prop-save-chg">Save changes</button>
+	</div>
+</div>
+
 
 <div id="prop-chg-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
@@ -218,7 +272,8 @@
   </div>
 </div>
 
-
+{{ $modal_sets }}
+{{--
 <div id="upload-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -242,8 +297,7 @@
     <button class="btn btn-primary" id="do-upload">Save changes</button>
   </div>
 </div>
-
-
+--}}
 
 <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
     <div class="slides"></div>
@@ -600,31 +654,6 @@
 
 		});
 
-		$('#upload-modal').on('hidden',function(){
-			$('#pictureupload_files ul').html('');
-			$('#pictureupload_uploadedform ul').html('');
-		});
-
-		$('#do-upload').on('click',function(){
-			var form = $('#upload-form');
-			console.log(form.serialize());
-
-			$.post(
-				'{{ URL::to('ajax/productpicture')}}',
-					form.serialize(),
-					function(data){
-						if(data.result == 'OK:UPLOADED'){
-							$('#upload-modal').modal('hide');
-							oTable.fnDraw();
-						}else if( data.result == 'ERR:UPDATEFAILED' ){
-							alert('Upload failed');
-						}
-					},
-					'json'
-				);
-
-		});
-
 
 		$('table.dataTable').click(function(e){
 
@@ -649,6 +678,8 @@
 					alert("Deletion cancelled");
 				}
 		   	}
+
+		   	{{ $js_table_event }}
 
 			if ($(e.target).is('.pbadge')) {
 				var _id = e.target.id;
@@ -740,87 +771,6 @@
 
 		   	}
 
-			if ($(e.target).is('.upload')) {
-				var _id = e.target.id;
-				var _rel = $(e.target).attr('rel');
-				var _source = $(e.target).data('source');
-				var _prop = $(e.target).data('prop');
-
-				$('#loading-pictures').show();
-
-				$.post('{{ URL::to('ajax/productinfo') }}', { product_id: _id },
-					function(data){
-
-						$('#loading-pictures').hide();
-
-						if(data.result == 'OK:FOUND'){
-							var defaultpic = data.data.defaultpic;
-
-							var brchead = data.data.brchead;
-							var brc1 = data.data.brc1;
-							var brc2 = data.data.brc2;
-							var brc3 = data.data.brc3;
-
-			            	console.log(brchead);
-
-							if(data.data.files){
-
-					            $.each(data.data.files, function (index, file) {
-					            	console.log(file);
-
-					            	var isdefault = (defaultpic == file.file_id)?'checked':'';
-					            	var isbrchead = (brchead == file.file_id)?'checked':'';
-					            	var isbrc1 = (brc1 == file.file_id)?'checked':'';
-					            	var isbrc2 = (brc2 == file.file_id)?'checked':'';
-					            	var isbrc3 = (brc3 == file.file_id)?'checked':'';
-
-					                var thumb = '<li><img style="width:125px;"  src="' + file.thumbnail_url + '" />'+
-					                    '<span class="file_del" id="' + file.file_id +'"><i class="icon-trash"></i></span>'+
-					                    '&nbsp;&nbsp;<span class="img-title">' + file.filename + '</span><br />' +
-					                    '<input type="radio" name="defaultpic" ' + isdefault + ' value="' + file.file_id + '"> Default<br />'+
-					                    'Brochure <br />' +
-					                    '<input type="radio" name="brchead" ' + isbrchead + ' value="' + file.file_id + '"> Head &nbsp;'+
-					                    '<input type="radio" name="brc1" ' + isbrc1 + ' value="' + file.file_id + '"> Pic 1 &nbsp;'+
-					                    '<input type="radio" name="brc2" ' + isbrc2 + ' value="' + file.file_id + '"> Pic 2 &nbsp;'+
-					                    '<input type="radio" name="brc3" ' + isbrc3 + ' value="' + file.file_id + '"> Pic 3 <br />'+
-					                '<label for="caption">Caption</label><input type="text" name="caption[]" />' +
-					                //'<label for="material">Material & Finish</label><input type="text" name="material[]" />' +
-					                //'<label for="tags">Tags</label><input type="text" name="tag[]" />' +
-					                '</li>';
-					                $(thumb).prependTo('#pictureupload_files ul');
-
-					                var upl = '<li id="fdel_' + file.file_id +'" ><input type="hidden" name="delete_type[]" value="' + file.delete_type + '">';
-					                upl += '<input type="hidden" name="delete_url[]" value="' + file.delete_url + '">';
-					                upl += '<input type="hidden" name="filename[]" value="' + file.filename  + '">';
-					                upl += '<input type="hidden" name="filesize[]" value="' + file.filesize  + '">';
-					                upl += '<input type="hidden" name="temp_dir[]" value="' + file.temp_dir  + '">';
-					                upl += '<input type="hidden" name="thumbnail_url[]" value="' + file.thumbnail_url + '">';
-					                upl += '<input type="hidden" name="large_url[]" value="' + file.large_url + '">';
-					                upl += '<input type="hidden" name="medium_url[]" value="' + file.medium_url + '">';
-					                upl += '<input type="hidden" name="full_url[]" value="' + file.full_url + '">';
-					                upl += '<input type="hidden" name="filetype[]" value="' + file.filetype + '">';
-					                upl += '<input type="hidden" name="fileurl[]" value="' + file.fileurl + '">';
-					                upl += '<input type="hidden" name="file_id[]" value="' + file.file_id + '"></li>';
-
-					                $(upl).prependTo('#pictureupload_uploadedform ul');
-
-					            });
-
-
-
-							}
-
-						}
-
-					},'json');
-
-				$('#upload-modal').modal();
-
-				$('#upload-id').val(_id);
-
-				$('#upload-title-id').html('Property ID : ' + _prop + ' &nbsp;&nbsp;&nbsp;Picture Source : ' + _source);
-
-		   	}
 
 
 			if ($(e.target).is('.chg')) {
@@ -853,6 +803,53 @@
 
 		});
 
+		$('#clear-attendance').on('click',function(){
+
+			var answer = confirm("Are you sure you want to delete this item ?");
+
+			if (answer == true){
+
+	            $.post('{{ URL::to('ajax/clearattendance')}}',
+		            {
+		                trx_id:$('#trx-chg').val(),
+		                status:$('#stat-chg').val()
+		            },
+		            function(data){
+		            	if(data.result == 'OK'){
+		            		alert('Attendance data cleared, ready to start the event.');
+		            		oTable.fnDraw();
+		            	}
+		            },
+	            'json');
+
+			}else{
+				alert("Clear data cancelled");
+			}
+
+
+		});
+
+		$('#clear-log').on('click',function(){
+
+				var answer = confirm("Are you sure you want to delete this item ?");
+
+				if (answer == true){
+
+		            $.post('{{ URL::to('ajax/clearlog')}}',
+			            {
+			            },
+			            function(data){
+			            	if(data.result == 'OK'){
+			            		alert('Attendance Log data cleared, ready to start the event.')
+			            	}
+			            },
+		            'json');
+
+				}else{
+					alert("Clear data cancelled");
+				}
+
+		});
 
 		$('#save-chg').on('click',function(){
             $.post('{{ URL::to('ajax/changestatus')}}',

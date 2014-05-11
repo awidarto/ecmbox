@@ -33,8 +33,37 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
+    {{ HTML::style('css/dataTables.bootstrap.css') }}
+
+    {{ HTML::style('css/bootstrap-timepicker.css') }}
+
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="{{ URL::to('bucket') }}/assets/file-uploader/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="{{ URL::to('bucket') }}/assets/file-uploader/css/jquery.fileupload-ui.css">
+
+
+    {{-- HTML::style('css/bootstrap-modal-bs3patch.css') --}}
+
+    {{ HTML::style('css/bootstrap-modal.css') }}
+
+    {{ HTML::style('css/sm-datepicker/bootstrap-datetimepicker.min.css') }}
+
+    {{-- HTML::style('css/flick/jquery-ui-1.9.2.custom.min.css') --}}
+
+    {{ HTML::style('css/daterangepicker-bs2.css') }}
+
+    {{ HTML::style('css/blueimp-gallery.min.css') }}
+
+    {{ HTML::style('css/form.css') }}
+
+    {{ HTML::style('css/jquery.tagsinput.css') }}
+
     <script src="{{ URL::to('bucket') }}/js/lib/jquery-1.11.0.min.js"></script>
 
+
+    <script type="text/javascript">
+        var base = '{{ URL::to('/') }}';
+    </script>
 </head>
 
 <body>
@@ -274,8 +303,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <!--breadcrumbs start -->
-                    @if(isset($bc))
-                        {{ $bc }}
+                    @if(isset($crumb))
+                        {{ $crumb }}
                     @endif
                     <!--breadcrumbs end -->
                 </div>
@@ -580,7 +609,7 @@
 <!--common script init for all pages-->
 <script src="{{ URL::to('bucket') }}/js/scripts.js"></script>
 
-    <!--script for this page only-->
+<!--script for this page only-->
 
 <script src="{{ URL::to('bucket')}}/js/calendar/external-dragging-calendar.js"></script>
 
@@ -606,6 +635,52 @@
         TreeView.init();
     });
 </script>
+
+    {{ HTML::script('js/bootstrap-modalmanager.js') }}
+    {{ HTML::script('js/bootstrap-modal.js') }}
+
+    {{ HTML::script('js/jquery.removeWhitespace.min.js')}}
+    {{ HTML::script('js/jquery.collagePlus.min.js')}}
+    {{ HTML::script('js/jquery.collageCaption.js')}}
+    {{ HTML::script('js/jquery-datatables/jquery.datatables.min.js')}}
+    {{ HTML::script('js/jquery-datatables/datatables.bootstrap.js')}}
+
+    {{ HTML::script('js/jquery.tagsinput.js') }}
+
+    {{-- HTML::script('js/bootstrap-timepicker.js') --}}
+    {{ HTML::script('js/sm-datepicker/bootstrap-datetimepicker.min.js') }}
+
+    {{ HTML::script('js/moment.min.js') }}
+    {{ HTML::script('js/daterangepicker.js') }}
+
+    {{ HTML::script('js/app.js') }}
+
+    {{ HTML::script('js/blueimp-gallery.min.js') }}
+    {{ HTML::script('js/jquery.blueimp-gallery.min.js') }}
+
+    {{ HTML::script('js/wysihtml5-0.3.0.min.js') }}
+
+    {{ HTML::script('js/bootstrap-wysihtml5-0.0.2.min.js') }}
+
+    {{ HTML::script('js/select2.js') }}
+
+    {{ HTML::script('js/jquery-fileupload/vendor/jquery.ui.widget.js') }}
+
+    {{ HTML::script('js/js-load-image/load-image.min.js') }}
+
+    {{ HTML::script('js/js-canvas-to-blob/canvas-to-blob.min.js') }}
+
+    {{ HTML::script('js/jquery-fileupload/jquery.iframe-transport.js') }}
+
+    {{ HTML::script('js/jquery-fileupload/jquery.fileupload.js') }}
+
+    {{ HTML::script('js/jquery-fileupload/jquery.fileupload-process.js') }}
+    {{ HTML::script('js/jquery-fileupload/jquery.fileupload-image.js') }}
+    {{ HTML::script('js/jquery-fileupload/jquery.fileupload-audio.js') }}
+    {{ HTML::script('js/jquery-fileupload/jquery.fileupload-video.js') }}
+    {{ HTML::script('js/jquery-fileupload/jquery.fileupload-validate.js') }}
+
+
 
 
 </body>

@@ -12,7 +12,15 @@
 */
 
 Route::controller('products', 'ProductsController');
+Route::controller('documents', 'DocumentsController');
 Route::controller('home', 'HomeController');
+Route::controller('user', 'UserController');
+Route::controller('project', 'ProjectController');
+Route::controller('hr', 'HrController');
+
+
+Route::controller('upload', 'UploadController');
+Route::controller('ajax', 'AjaxController');
 
 /*
 Route::get('/', function()
@@ -22,13 +30,26 @@ Route::get('/', function()
     Breadcrumb::addBreadcrumb('Home', '/');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-	return View::make('home')->with('bc',$bc);
+	return View::make('home')->with('crumb',$crumb);
 });
 */
 
-Route::get('/','HomeController@getDashboard');
+Route::get('/','DocumentsController@getIndex');
+
+Route::get('barcode/dl/{txt}',function($txt){
+    $barcode = new Barcode();
+    $barcode->make($txt,'code128',60, 'horizontal' ,true);
+    return $barcode->render('jpg',$txt,true);
+});
+
+Route::get('barcode/{txt}',function($txt){
+    $barcode = new Barcode();
+    $barcode->make($txt,'code128',60, 'horizontal' ,true);
+    return $barcode->render('jpg',$txt);
+});
+
 
 Route::get('calendar', function()
 {
@@ -38,10 +59,10 @@ Route::get('calendar', function()
     Breadcrumb::addBreadcrumb('Assignments');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
 
-    return View::make('pages.calendar')->with('bc',$bc);
+    return View::make('pages.calendar')->with('crumb',$crumb);
 });
 
 Route::get('timesheet', function()
@@ -51,12 +72,13 @@ Route::get('timesheet', function()
     Breadcrumb::addBreadcrumb('Timesheet Recorder');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
 
-    return View::make('pages.timesheet')->with('bc',$bc);
+    return View::make('pages.timesheet')->with('crumb',$crumb);
 });
 
+/*
 Route::get('projects/detail', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
@@ -66,9 +88,9 @@ Route::get('projects/detail', function()
     Breadcrumb::addBreadcrumb('View');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.projectdetail')->with('bc',$bc);
+    return View::make('pages.projectdetail')->with('crumb',$crumb);
 });
 
 Route::get('projects', function()
@@ -79,11 +101,10 @@ Route::get('projects', function()
     Breadcrumb::addBreadcrumb('Projects', '/projects');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.projects')->with('bc',$bc);
+    return View::make('pages.projects')->with('crumb',$crumb);
 });
-
 
 Route::get('documents/detail', function()
 {
@@ -94,9 +115,9 @@ Route::get('documents/detail', function()
     Breadcrumb::addBreadcrumb('View');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.docdetail')->with('bc',$bc);
+    return View::make('pages.docdetail')->with('crumb',$crumb);
 });
 
 Route::get('documents', function()
@@ -107,10 +128,11 @@ Route::get('documents', function()
     Breadcrumb::addBreadcrumb('Document Library', '/document');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.document')->with('bc',$bc);
+    return View::make('pages.document')->with('crumb',$crumb);
 });
+*/
 
 Route::get('finance/timebilling', function()
 {
@@ -120,9 +142,9 @@ Route::get('finance/timebilling', function()
     Breadcrumb::addBreadcrumb('Document Library', '/document');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.timebilling')->with('bc',$bc);
+    return View::make('pages.timebilling')->with('crumb',$crumb);
 });
 
 Route::get('finance/billing', function()
@@ -133,12 +155,25 @@ Route::get('finance/billing', function()
     Breadcrumb::addBreadcrumb('Document Library', '/document');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.billing')->with('bc',$bc);
+    return View::make('pages.billing')->with('crumb',$crumb);
 });
 
+Route::get('locator', function()
+{
+    Theme::setCurrentTheme( Config::get('ecm.active_theme') );
 
+    Breadcrumb::addBreadcrumb('Home', '/');
+    Breadcrumb::addBreadcrumb('Team Locator', '/locator');
+    Breadcrumb::setSeperator('');
+
+    $crumb = Breadcrumb::generate();
+
+    return View::make('pages.locator')->with('crumb',$crumb);
+});
+
+/*
 Route::get('hr/profile', function()
 {
     Theme::setCurrentTheme( Config::get('ecm.active_theme') );
@@ -148,9 +183,9 @@ Route::get('hr/profile', function()
     Breadcrumb::addBreadcrumb('Employee Profile');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.hrprofile')->with('bc',$bc);
+    return View::make('pages.hrprofile')->with('crumb',$crumb);
 });
 
 Route::get('hr', function()
@@ -161,11 +196,13 @@ Route::get('hr', function()
     Breadcrumb::addBreadcrumb('Human Resources', '/hr');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
 
-    return View::make('pages.hrlist')->with('bc',$bc);
+    return View::make('pages.hrlist')->with('crumb',$crumb);
 });
+
+*/
 
 Route::get('client/profile', function()
 {
@@ -176,9 +213,9 @@ Route::get('client/profile', function()
     Breadcrumb::addBreadcrumb('Client Profile');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.clientprofile')->with('bc',$bc);
+    return View::make('pages.clientprofile')->with('crumb',$crumb);
 });
 
 Route::get('client/company', function()
@@ -190,9 +227,9 @@ Route::get('client/company', function()
     Breadcrumb::addBreadcrumb('Company');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.clientlist')->with('bc',$bc);
+    return View::make('pages.clientlist')->with('crumb',$crumb);
 });
 
 Route::get('client', function()
@@ -204,9 +241,9 @@ Route::get('client', function()
     Breadcrumb::addBreadcrumb('Contacts');
     Breadcrumb::setSeperator('');
 
-    $bc = Breadcrumb::generate();
+    $crumb = Breadcrumb::generate();
 
-    return View::make('pages.clientlist')->with('bc',$bc);
+    return View::make('pages.clientlist')->with('crumb',$crumb);
 });
 
 Route::get('message/compose', function()
