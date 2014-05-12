@@ -47,7 +47,7 @@ class DocumentsController extends AdminController {
 
         $this->modal_sets = View::make( strtolower( $this->controller_name ).'.modal')->render();
 
-        $this->js_table_event = View::make($this->controller_name.'.tableevent')->render();
+        $this->js_table_event = View::make(strtolower($this->controller_name).'.tableevent')->render();
 
         return parent::getIndex();
 
