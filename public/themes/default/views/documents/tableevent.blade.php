@@ -31,19 +31,8 @@
                                     var isbrc2 = (brc2 == file.file_id)?'checked':'';
                                     var isbrc3 = (brc3 == file.file_id)?'checked':'';
 
-                                    var thumb = '<li><img style="width:125px;"  src="' + file.thumbnail_url + '" />'+
-                                        '<span class="file_del" id="' + file.file_id +'"><i class="icon-trash"></i></span>'+
-                                        '&nbsp;&nbsp;<span class="img-title">' + file.filename + '</span><br />' +
-                                        '<input type="radio" name="defaultpic" ' + isdefault + ' value="' + file.file_id + '"> Default<br />'+
-                                        'Brochure <br />' +
-                                        '<input type="radio" name="brchead" ' + isbrchead + ' value="' + file.file_id + '"> Head &nbsp;'+
-                                        '<input type="radio" name="brc1" ' + isbrc1 + ' value="' + file.file_id + '"> Pic 1 &nbsp;'+
-                                        '<input type="radio" name="brc2" ' + isbrc2 + ' value="' + file.file_id + '"> Pic 2 &nbsp;'+
-                                        '<input type="radio" name="brc3" ' + isbrc3 + ' value="' + file.file_id + '"> Pic 3 <br />'+
-                                    '<label for="caption">Caption</label><input type="text" name="caption[]" />' +
-                                    //'<label for="material">Material & Finish</label><input type="text" name="material[]" />' +
-                                    //'<label for="tags">Tags</label><input type="text" name="tag[]" />' +
-                                    '</li>';
+                                    {{ View::make('fupload.jsajdetail') }}
+
                                     $(thumb).appendTo('#pictureupload_files ul');
 
                                     var upl = '<li id="fdel_' + file.file_id +'" ><input type="hidden" name="delete_type[]" value="' + file.delete_type + '">';
