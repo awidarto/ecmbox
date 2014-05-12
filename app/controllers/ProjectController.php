@@ -45,7 +45,7 @@ class ProjectController extends AdminController {
 
         $this->title = 'Projects';
 
-        $this->modal_sets = View::make($this->controller_name.'.modal')->render();
+        $this->modal_sets = View::make( strtolower($this->controller_name).'.modal')->render();
 
         $this->js_table_event = View::make($this->controller_name.'.tableevent')->render();
 
